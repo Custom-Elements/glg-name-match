@@ -1,0 +1,13 @@
+{
+  "name": "glg-name-match",
+  "repository": "https://github.com/Custom-Elements/glg-name-match",
+  "version": "0.0.1",
+  "dependencies": {
+    "polymer-serve": "^0.0.34",
+    "webcomponents": "git://github.com/custom-elements/webcomponentsjs#master"
+  },
+  "license": "ISC",
+  "scripts": {
+    "test": "polymer-serve ."
+  }
+}
