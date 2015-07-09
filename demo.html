@@ -37,7 +37,7 @@
         <icon search></icon>
         <template value>
           <value>
-            <strong>{{name}}</strong>
+            <strong>{{_source.name}}</strong>
           </value>
         </template>
 
@@ -45,7 +45,7 @@
         <!-- assumes results are interleaved, not grouped by entity -->
         <template id="foo" repeat="{{hits}}" ng-non-bindable>
           <ui-typeahead-item>
-          <span><strong>{{_source.name}}</strong>, <i>{{_source.title}}</i> (&nbsp;ID:{{_source.councilMemberId}}&nbsp;)</span>
+            <span><strong>{{_source.name}}</strong>, <i>{{_source.title}}</i> (&nbsp;ID:{{_source._id}}&nbsp;)</span>
           </ui-typeahead-item>
         </template>
       </ui-typeahead>
