@@ -12,7 +12,7 @@ Include the glg-name-match polymer component in your package.json.
 
 Import the glg-name-match.html in your HTML.
 
-    <link rel="import" href="node_modules/glg-name-match/src/glg-name-match.html"></script>
+    <link rel="import" href="node_modules/glg-name-match/src/glg-name-match.html">
 
 ## polyfills
 Using the glg-name-match polymer component of course presumes that the
