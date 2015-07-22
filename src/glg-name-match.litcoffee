@@ -7,7 +7,7 @@ When results are ready the element then fires a `results` event.
 
 ## Attributes
 ### url
-Required. The url to the cerca server, not including protocal. For example:
+Required. The url to the cerca server, not including protocol. For example:
 services.glgresearch.com/cerca
 
 ### indices
@@ -70,7 +70,7 @@ Retrieves results for either query or jump
 Takes the body of the POST and makes an xhr request to the server for results
 
       fetchResults: (body) ->
-        #TODO:  strip out protocal from url if it's there and replace it with https
+        #TODO:  strip out protocol from url if it's there and replace it with https
         #       also need to remove any trailing slashes
         req = new XMLHttpRequest()
         req.open 'POST', "https://#{@url}/#{@indices}/_search?ignore_unavailable=true"
@@ -78,7 +78,6 @@ Takes the body of the POST and makes an xhr request to the server for results
         req.onreadystatechange = () =>
           if req.readyState is 4
             if req.status is 200
-              hits = JSON.parse
               try
                 hits = JSON.parse(req.responseText).hits
               catch
