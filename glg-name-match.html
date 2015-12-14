@@ -1,0 +1,225 @@
+<!-- glg-name-match for Polymer 1.0 -->
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../iron-ajax/iron-ajax.html">
+
+<dom-module id="glg-name-match">
+  <template>
+    <iron-ajax
+      on-response="_setCountries"
+      auto
+      id="countries"
+      with-credentials
+      handle-as="json">
+    </iron-ajax>
+  </template>
+</dom-module>
+<script>
+  Polymer({
+    is: 'glg-cm-pay',
+    properties: {
+      url: {
+        type: String,
+        value: "services.glgresearch.com/cerca"
+      },
+      matchField: {
+        type: String,
+        value: "name"
+      },
+      fields: {
+        type: String,
+        value: null
+      },
+      indices: {
+        type: String,
+        value: null
+      },
+      minScore: {
+        type: String,
+        value: 0.5
+      },
+      size: {
+        type: String,
+        value: 10
+      },
+      secondarySortField: {
+        type: String,
+        value: null
+      },
+      secondarySortOrder: {
+        type: String,
+        value: null
+      }
+    },
+    // Retrieves results for either query or jump
+    _search: function(val, type) {
+      var bodyFunction, field, obj1, obj2, opts, ref, ref1, ref2, ref3;
+      if (type == null) {
+        type = 'query';
+      }
+      opts = {};
+      opts.matchField = (ref = this.matchField) != null ? ref : 'name';
+      opts.val = val;
+      opts.size = (ref1 = this.size) != null ? ref1 : 10;
+      opts.minScore = (ref2 = this.minScore) != null ? ref2 : 0.5;
+      if (this.fields != null) {
+        opts.fields = (function() {
+          var i, len, ref3, results;
+          ref3 = this.fields.split(',');
+          results = [];
+          for (i = 0, len = ref3.length; i < len; i++) {
+            field = ref3[i];
+            results.push(field.trim());
+          }
+          return results;
+        }).call(this);
+      }
+      opts.sort = ["_score"];
+      if (this.secondarySortField != null) {
+        opts.sort.push((
+          obj1 = {},
+          obj1["" + this.secondarySortField] = {
+            order: (ref3 = this.secondarySortOrder) != null ? ref3 : "asc"
+          },
+          obj1
+        ));
+      }
+      opts.sort.push((
+        obj2 = {},
+        obj2[opts.matchField + ".sort"] = {
+          order: "asc"
+        },
+        obj2
+      ));
+      bodyFunction = type === 'jump' ? this._getJumpBody : this._getQueryBody;
+      return this._fetchResults(bodyFunction(opts));
+    },
+    // Takes the body of the POST and makes an xhr request to the server for results
+    // TODO: refactor this so it uses iron-ajax
+    _fetchResults: function(body) {
+      var req;
+      req = new XMLHttpRequest();
+      req.open('POST', "https://" + this.url + "/" + this.indices + "/_search?ignore_unavailable=true");
+      req.withCredentials = true;
+      req.onreadystatechange = (function(_this) {
+        return function() {
+          var error, hits;
+          if (req.readyState === 4) {
+            if (req.status === 200) {
+              try {
+                return hits = JSON.parse(req.responseText).hits;
+              } catch (_error) {
+                error = "glg-name-match received a " + req.status + " response code: " + req;
+                console.error(error);
+                return _this.fire('name-match-error', error);
+              } finally {
+                _this.fire('name-match-results', hits);
+              }
+            } else {
+              error = "glg-name-match received a " + req.status + " response code: " + req;
+              console.error(error);
+              return _this.fire('name-match-error', error);
+            }
+          }
+        };
+      })(this);
+      req.onerror = (function(_this) {
+        return function(e) {
+          var error;
+          error = "glg-name-match xhr error: " + e.error;
+          console.error(error);
+          return _this.fire('name-match-error', error);
+        };
+      })(this);
+      return req.send(JSON.stringify(body));
+    },
+    // Returns the body of the post for cerca jump
+    _getJumpBody: function(opts) {
+      var body;
+      body = {
+        query: {
+          match: {
+            "_id": opts.val
+          }
+        }
+      };
+      if (opts.fields != null) {
+        body.fields = opts.fields;
+      }
+      return body;
+    },
+    // Returns the body of the post for cerca query
+    _getQueryBody: function(opts) {
+      var body, obj1, obj2, obj3;
+      body = {
+        min_score: opts.minScore,
+        query: {
+          function_score: {
+            filter: {
+              query: {
+                match: (
+                  obj1 = {},
+                  obj1[opts.matchField + ".trigram"] = opts.val,
+                  obj1
+                )
+              }
+            },
+            functions: [
+              {
+                script_score: {
+                  script: "tf_script_score",
+                  params: {
+                    field: opts.matchField + ".trigram",
+                    querystring: opts.val,
+                    lowercase: true,
+                    foldascii: true
+                  },
+                  lang: "native"
+                }
+              }, {
+                filter: {
+                  query: {
+                    match: (
+                      obj2 = {},
+                      obj2[opts.matchField + ".edgetrigram"] = opts.val,
+                      obj2
+                    )
+                  }
+                },
+                boost_factor: 0.001
+              }, {
+                filter: {
+                  query: {
+                    match: (
+                      obj3 = {},
+                      obj3[opts.matchField + ".sort"] = opts.val,
+                      obj3
+                    )
+                  }
+                },
+                boost_factor: 0.001
+              }
+            ],
+            score_mode: "sum",
+            boost_mode: "replace"
+          }
+        },
+        sort: opts.sort,
+        size: opts.size
+      };
+      if (opts.fields != null) {
+        body.fields = opts.fields;
+      }
+      return body;
+    },
+    // Retrieves results from cerca based on query text and fires the 'results' event
+    // when results are available.
+    query: function(val) {
+      return this._search(val, 'query');
+    },
+    // Retrieves results from cerca based on object ID and fires the 'results' event
+    // when results are available.
+    jump: function(val) {
+      return this._search(val, 'jump');
+    }
+  });
+</script>

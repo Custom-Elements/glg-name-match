@@ -5,6 +5,14 @@ and custom scoring/sorting designed to provide results for typeahead.
 To see the events, attributes, and methods of the glg-name-match polymer
 component, take a look at the [literate coffeescript source files](src/glg-name-match.litcoffee).
 
+## versions
+
+* **v1.x**
+  Use with Polymer 0.5 (beta) 
+
+* **v2.x*
+  Use with Polymer 1.0 
+
 ## usage
 Include the glg-name-match polymer component in your package.json.
 

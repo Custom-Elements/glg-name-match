@@ -1,0 +1,24 @@
+{
+  "name": "glg-name-match",
+  "version": "2.0.0",
+  "homepage": "https://github.com/Custom-Elements/glg-name-match",
+  "authors": [
+    "Steve Quince",
+    "Amit Segal"
+  ],
+  "description": "Typeahead adapter for polymer 1.0 and GLG Cerca",
+  "main": "glg-name-match.html",
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "polymer": "Polymer/polymer#^1.2.0",
+    "paper-elements": "PolymerElements/paper-elements#~1.0.5"
+  }
+}
