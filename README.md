@@ -15,12 +15,15 @@ component, take a look at the [literate coffeescript source files](src/glg-name-
 
 ## usage
 Include the glg-name-match polymer component in your package.json.
-
-    "glg-name-match":"git://github.com/custom-elements/glg-name-match#master"
+```
+"glg-name-match":"git://github.com/custom-elements/glg-name-match#master"
+```
 
 Import the glg-name-match.html in your HTML.
 
-    <link rel="import" href="node_modules/glg-name-match/src/glg-name-match.html">
+```
+<link rel="import" href="node_modules/glg-name-match/src/glg-name-match.html">
+```
 
 ## polyfills
 Using the glg-name-match polymer component of course presumes that the
