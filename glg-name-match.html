@@ -211,12 +211,12 @@
       }
       return body;
     },
-    // Retrieves results from cerca based on query text and fires the 'results' event
+    // Retrieves results from cerca based on query text and fires the 'name-match-results' event
     // when results are available.
     query: function(val) {
       return this._search(val, 'query');
     },
-    // Retrieves results from cerca based on object ID and fires the 'results' event
+    // Retrieves results from cerca based on object ID and fires the 'name-match-results' event
     // when results are available.
     jump: function(val) {
       return this._search(val, 'jump');
