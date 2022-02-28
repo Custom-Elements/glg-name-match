@@ -18,7 +18,7 @@
     "tests"
   ],
   "dependencies": {
-    "polymer": "Polymer/polymer#^1.2.0",
-    "paper-elements": "PolymerElements/paper-elements#~1.0.5"
+    "polymer": "git+https://github.com/Polymer/polymer#^1.2.0",
+    "paper-elements": "git+https://github.com/PolymerElements/paper-elements#~1.0.5"
   }
 }
