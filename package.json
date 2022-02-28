@@ -4,7 +4,7 @@
   "version": "1.0.2",
   "dependencies": {
     "polymer-serve": "^0.0.34",
-    "webcomponents": "git://github.com/custom-elements/webcomponentsjs#master"
+    "webcomponents": "git+https://github.com/custom-elements/webcomponentsjs#master"
   },
   "license": "ISC",
   "scripts": {
